@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    {% if not isEdit %}
     <title>Create Blog</title>
+    {% else %}
+    <title>Edit Blog</title>
+    {% endif %}
 </head>
 <body>
     {% if not isEdit %}
@@ -17,11 +21,10 @@
         <h1>Edit Blog</h1>
     </div>
     {% endif %}
-    
-    <form action="" class="form-group", method="POST" style="display:flex; flex-direction: column; justify-content: center; align-items: center;">
+
+    {% if not isEdit %}
+    <form action="" class="form-group" method="POST" style="display:flex; flex-direction: column; justify-content: center; align-items: center;">
         {% csrf_token %}
-        {% if not isEdit %}
-        
         <div style="width:50rem" class="mb-3 text-center">
             <label for="title" class="form-label"><h3>Title</h3></label>
             <input type="text" requried name="title" class="form-control" id="title" placeholder="Title">
@@ -29,23 +32,48 @@
           <div style="width:50rem" class="mb-3 text-center">
             <label for="content" class="form-label"><h3>Content</h3></label>
             <textarea name="content" class="form-control" id="content" rows="3"></textarea>
-          </div>
-          {% else %}
-          
-        <div style="width:50rem" class="mb-3 text-center">
-            <label for="title" class="form-label"><h3>Title</h3></label>
-            <input value="{{post.title}}" type="text" requried name="title" class="form-control" id="title" placeholder="Title">
-          </div>
-          <div style="width:50rem" class="mb-3 text-center">
-            <label for="content" class="form-label"><h3>Content</h3></label>
-            <textarea " name="content" class="form-control" id="content" rows="3">{{post.content}}</textarea>
-          </div>
-          {% endif %}
+          </div>    
+          <div style="width: 800px; display:flex; flex-direction: row; justify-content: space-between;">
+              <button type="submit" class="btn btn-success">Post</button>
+              
+              <div>
+                  <label class="form-label" for="saveDraft">Save as Draft</label>
+                  <input class="form-check-input mt-0" name="isDraft" id="saveDraft" type="checkbox" value="True" aria-label="Checkbox for following text input">
+              </div>
 
-    
-          <div>
-              <button type="submit" class="btn btn-success">Finish</button>
+              <div>
+                <a href="/main" class="btn btn-danger">Back</a>
+              </div>
+              <!-- <a href="/create_blog/{{user.id}}/0" type="submit" class="btn btn-warning">Save as Draft</a> -->
           </div>
     </form>
+
+    {% else %}
+    <form action="" class="form-group" method="POST" style="display:flex; flex-direction: column; justify-content: center; align-items: center;">
+        {% csrf_token %}
+    <div style="width:50rem" class="mb-3 text-center">
+        <label for="title" class="form-label"><h3>Title</h3></label>
+        <input value="{{post.title}}" type="text" requried name="title" class="form-control" id="title" placeholder="Title">
+      </div>
+      <div style="width:50rem" class="mb-3 text-center">
+        <label for="content" class="form-label"><h3>Content</h3></label>
+        <textarea name="content" class="form-control" id="content" rows="3">{{post.content}}</textarea>
+      </div>
+      <div style="width: 800px; display:flex; flex-direction: row; justify-content: space-between;">
+        <div>
+            <button type="submit" class="btn btn-success">Update</button>
+        </div>
+            {% if isEdit and post.status == 0 %}
+            <div>
+                <label class="form-label" for="saveDraft">Save as Draft</label>
+                <input class="form-check-input mt-0" name="isDraft" id="saveDraft" type="checkbox" value="True" aria-label="Checkbox for following text input">
+            </div>
+            {% endif %}
+            <div>
+                <a href="/main" class="btn btn-danger">Back</a>
+              </div>
+            
+        </form>
+      {% endif %}
 </body>
 </html>

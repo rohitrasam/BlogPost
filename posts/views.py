@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .models import Post
+from datetime import datetime as dt
 # Create your views here.
 
 def index(request):
@@ -45,7 +46,7 @@ def user_login(request: HttpRequest):
 
 def main(request: HttpRequest):
     
-    posts = Post.objects.all()
+    posts = Post.objects.filter(status=1)
 
     return render(request, 'main.html', {'posts':posts})
 
@@ -58,22 +59,44 @@ def open_blog(request: HttpRequest, id:int):
 
 
 def create_blog(request: HttpRequest, user_id: int):
+    print(request.method, 'line 62')
     if request.method == "POST":
         title = request.POST['title']
         content = request.POST['content']
-        post = Post(title=title, content=content, author=User.objects.get(pk=user_id))
+        draft =  request.POST.get('isDraft', False)
+        # print(draft, 'line 67')
+        if draft:
+            post = Post(title=title, content=content, author=User.objects.get(pk=user_id))
+        else:
+            post = Post(title=title, content=content, author=User.objects.get(pk=user_id), status=1, published_date=dt.isoformat(dt.now()))
         post.save()
         return redirect('main')
+
     return render(request, 'create_blog.html')
 
 
 def edit_blog(request: HttpRequest, blog_id: int):
     post = Post.objects.get(pk=blog_id)
-
+    print(request.method, 'line 78')
     if request.method == "POST":
         post.title = request.POST['title']
         post.content = request.POST['content']
+        draft = request.POST.get('isDraft', False)
+        if draft:
+            post.status = 0
+        else:
+            post.status = 1
+            post.published_date =  dt.isoformat(dt.now()) if not post.published_date else post.published_date
         post.save()
         return redirect('main')
 
     return render(request, 'create_blog.html', {'post':post, 'isEdit': True})
+
+
+def drafts(request: HttpRequest, user_id: int):
+
+    user = User.objects.get(pk=user_id)
+    posts = user.blogs.filter(status=0)
+    print(posts)
+
+    return render(request, 'drafts.html', {'posts': posts})

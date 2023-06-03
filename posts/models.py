@@ -12,11 +12,11 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blogs')
     content = models.TextField(default="")
     creation_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    published_date = models.DateTimeField(null=True)
     status = models.IntegerField(choices=STATUS, default=0)
 
     class Meta:
-        ordering = ('-creation_date',)
+        ordering = ('-published_date',)
 
     def __str__(self):
         return f"{self.title}"
