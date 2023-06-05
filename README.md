@@ -1,7 +1,7 @@
 # BlogPost
 #### A simple app to create and update blogs by users
 
-## Instruction to run the app
+## Instructions to run the app
 1. Clone the repo in your machine
 2. Open the folder in the terminal and run `virtualenv venv` to install the python virtual environment
 3. Run `.\venv\scripts\activate` to activate the virtual environment
