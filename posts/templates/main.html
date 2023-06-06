@@ -30,11 +30,9 @@
             </div>
 
             <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <a class="btn btn-primary" href="/blog/{{post.id}}">Open</a>
                 {% if post.author.id == user.id %}
-                <a class="btn btn-primary" href="/blog/{{post.id}}">Open</a>
                 <a href="/edit_blog/{{post.id}}" class="btn btn-warning">Edit</a>
-                {% else %}
-                <a class="btn btn-primary" href="/blog/{{post.id}}">Open</a>
                 {% endif %}
             </div>
             </div>
