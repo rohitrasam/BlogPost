@@ -20,3 +20,19 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+    @property
+    def likes(self):
+        return Likes.objects.filter(post_id=self).count()
+
+    
+
+class Likes(models.Model):
+
+    id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user}, {self.post}"
+        

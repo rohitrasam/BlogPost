@@ -3,7 +3,7 @@ from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from .models import Post
+from .models import Post, Likes
 from datetime import datetime as dt
 # Create your views here.
 
@@ -52,6 +52,9 @@ def main(request: HttpRequest):
 
 def signout(request):
     pass
+
+
+
 
 def open_blog(request: HttpRequest, id:int):
     post = Post.objects.get(pk=id)
