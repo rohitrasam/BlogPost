@@ -66,13 +66,10 @@ def like_blog(request: HttpRequest,):
             liked = True
         else:
             liked = False
-    # return redirect('blog', id=post_id)
-    return render(request, 'blogs.html', {'post': post, 'liked':liked})
+    return redirect('blog', id=post_id, liked=liked)
 
 
-
-
-def open_blog(request: HttpRequest, id:int):
+def open_blog(request: HttpRequest, id:int, liked: bool):
     post = Post.objects.get(pk=id)
     if post.id in request.user.likes.values_list('post_id', flat=True):
         liked = True
