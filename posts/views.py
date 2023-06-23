@@ -54,11 +54,31 @@ def signout(request):
     pass
 
 
+def like_blog(request: HttpRequest,):
+    if request.method == 'POST':
+        post_id = request.POST['post-id']
+        post = Post.objects.get(id=post_id)
+        user = request.user
+        liked, created = Likes.objects.get_or_create(post=post, user=user)
+        if not created:
+            liked.delete()
+        if post.id in user.likes.values_list('post_id', flat=True):
+            liked = True
+        else:
+            liked = False
+    # return redirect('blog', id=post_id)
+    return render(request, 'blogs.html', {'post': post, 'liked':liked})
+
+
 
 
 def open_blog(request: HttpRequest, id:int):
     post = Post.objects.get(pk=id)
-    return render(request, 'blogs.html', {'post': post})
+    if post.id in request.user.likes.values_list('post_id', flat=True):
+        liked = True
+    else:
+        liked = False
+    return render(request, 'blogs.html', {'post': post, 'liked':liked})
 
 
 def create_blog(request: HttpRequest, user_id: int):
@@ -87,7 +107,7 @@ def edit_blog(request: HttpRequest, blog_id: int):
             post.status = 0
         else:
             post.status = 1
-            post.published_date =  dt.isoformat(dt.now()) if not post.published_date else post.published_date
+            post.published_date = dt.isoformat(dt.now()) if not post.published_date else post.published_date
         post.save()
         return redirect('main')
 
