@@ -8,14 +8,33 @@
     <title>{{post.title}}</title>
 </head>
 <body style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-    <div style="width: 500px; height: auto; margin: 10px" class="card text-center">
+    <div style="width: 800px; height: auto; margin: 10px" class="card text-center">
         <div class="card-body">
           <h5 class="card-title">{{post.title}}</h5>
           <p class="card-text">{{post.content}}</p>
           <div style="display: flex; flex-direction: row; justify-content: space-between;">
             <p class="card-text"><small class="text-body-secondary"><b>Published On: </b>{{post.published_date}}</small></p>
             {% load static %}
-            <p class="card-text"><small class="text-body-secondary"><img src="{% static 'heart.png' %}" alt="'heart"> {{post.likes}}</small></p>
+            <form action="{% url 'like_blog' %}" method="POST">
+              {% csrf_token %}
+              <p class="card-text">
+                <input type="hidden", name="post-id" value="{{post.id}}">
+                <button type="submit" style="background-color: transparent; border: 0px;">
+                <small class="text-body-secondary">
+                  {% if not liked %}
+                    <img src="{% static 'heart_base.png' %}" alt="heart_base"> {{post.likes}}
+                  {% else %}
+                    <img src="{% static 'heart.png' %}" alt="heart"> {{post.likes}}
+                  {% endif %}
+                </small>
+              </button>
+              </p>
+              <p class="card-text">
+                <small class="text-body-secondary">
+                </small>
+              </p>
+            </form>
+
             <p class="card-text"><small class="text-body-secondary"><b>Posted by: </b>{{post.author.first_name}} {{post.author.last_name}}</small></p>
         </div>
         </div>
